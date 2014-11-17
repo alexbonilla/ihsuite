@@ -29,8 +29,18 @@ public class dbConnector {
     private String pass;
     private String dbvendor;
     private String driver;
+
+    /**
+     *
+     */
     public Connection connection;
 
+    /**
+     *
+     * @param configuration_path
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public dbConnector(String configuration_path) throws FileNotFoundException, IOException {
 
         Properties props = new Properties();
@@ -45,40 +55,81 @@ public class dbConnector {
 
     }
 
+    /**
+     *
+     * @param configuration_path
+     * @param dbid
+     * @throws IOException
+     */
     public dbConnector(String configuration_path, int dbid) throws IOException {
         this(configuration_path);
         database = database + String.format("%03d", dbid);
     }
 
+    /**
+     *
+     * @param configuration_path
+     * @param dbid
+     * @throws IOException
+     */
     public dbConnector(String configuration_path, String dbid) throws IOException {
         this(configuration_path);
         database = database + dbid;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDatabase() {
         return database;
     }
 
+    /**
+     *
+     * @param database
+     */
     public void setDatabase(String database) {
         this.database = database;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     *
+     * @param user
+     */
     public void setUser(String user) {
         this.user = user;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPass() {
         return pass;
     }
 
+    /**
+     *
+     * @param pass
+     */
     public void setPass(String pass) {
         this.pass = pass;
     }
 
+    /**
+     *
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public void connect() throws ClassNotFoundException, SQLException {
 
         Class.forName(driver);
@@ -111,6 +162,11 @@ public class dbConnector {
         return connectionurl;
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public boolean disconnect() throws SQLException {
 
         if (connection != null && !connection.isClosed()) {

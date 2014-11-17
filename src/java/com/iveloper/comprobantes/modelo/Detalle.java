@@ -35,46 +35,90 @@ public class Detalle {
     private List<DetAdicional> detAdicional;
     private List<Impuesto> impuesto;
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getCantidad() {
         return cantidad;
     }
 
+    /**
+     *
+     * @param cantidad
+     */
     public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCodigoAuxiliar() {
         return codigoAuxiliar;
     }
 
+    /**
+     *
+     * @param codigoAuxiliar
+     */
     public void setCodigoAuxiliar(String codigoAuxiliar) {
         this.codigoAuxiliar = codigoAuxiliar;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCodigoPrincipal() {
         return codigoPrincipal;
     }
 
+    /**
+     *
+     * @param codigoPrincipal
+     */
     public void setCodigoPrincipal(String codigoPrincipal) {
         this.codigoPrincipal = codigoPrincipal;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     *
+     * @param descripcion
+     */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getDescuento() {
         return descuento;
     }
 
+    /**
+     *
+     * @param descuento
+     */
     public void setDescuento(BigDecimal descuento) {
         this.descuento = descuento;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name = "detallesAdicionales")
     public List<DetAdicional> getDetAdicional() {
         if (detAdicional == null) {
@@ -83,14 +127,26 @@ public class Detalle {
         return detAdicional;
     }
 
+    /**
+     *
+     * @param detAdicional
+     */
     public void setDetAdicional(List<DetAdicional> detAdicional) {
         this.detAdicional = detAdicional;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getPrecioTotalSinImpuesto() {
         return precioTotalSinImpuesto;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name = "impuestos")
     public List<Impuesto> getImpuesto() {
         if (impuesto == null) {
@@ -99,34 +155,66 @@ public class Detalle {
         return impuesto;
     }
 
+    /**
+     *
+     * @param impuesto
+     */
     public void setImpuesto(List<Impuesto> impuesto) {
         this.impuesto = impuesto;
     }
 
+    /**
+     *
+     * @param precioTotalSinImpuesto
+     */
     public void setPrecioTotalSinImpuesto(BigDecimal precioTotalSinImpuesto) {
         this.precioTotalSinImpuesto = precioTotalSinImpuesto;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getPrecioUnitario() {
         return precioUnitario;
     }
 
+    /**
+     *
+     * @param precioUnitario
+     */
     public void setPrecioUnitario(BigDecimal precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCodigoInterno() {
         return codigoInterno;
     }
 
+    /**
+     *
+     * @param codigoInterno
+     */
     public void setCodigoInterno(String codigoInterno) {
         this.codigoInterno = codigoInterno;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCodigoAdicional() {
         return codigoAdicional;
     }
 
+    /**
+     *
+     * @param codigoAdicional
+     */
     public void setCodigoAdicional(String codigoAdicional) {
         this.codigoAdicional = codigoAdicional;
     }

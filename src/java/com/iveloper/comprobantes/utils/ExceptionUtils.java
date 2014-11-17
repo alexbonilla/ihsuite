@@ -15,6 +15,11 @@ import java.io.Writer;
  */
 public class ExceptionUtils {
 
+    /**
+     *
+     * @param throwable
+     * @return
+     */
     public static String getStackTrace(Throwable throwable) {
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);

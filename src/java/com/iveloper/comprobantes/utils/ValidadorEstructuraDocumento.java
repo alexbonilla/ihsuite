@@ -19,11 +19,20 @@ public class ValidadorEstructuraDocumento {
     private StreamSource archivoXSD;
     private StreamSource archivoXML;
 
+    /**
+     *
+     * @param strArchivoXSD
+     * @param strArchivoXML
+     */
     public ValidadorEstructuraDocumento(InputStream strArchivoXSD, InputStream strArchivoXML) {
         this.archivoXSD = new StreamSource(strArchivoXSD);
         this.archivoXML = new StreamSource(strArchivoXML);
     }
 
+    /**
+     *
+     * @return
+     */
     public String validacion() {
         validarArchivo(archivoXSD, "archivoXSD");
         validarArchivo(archivoXML, "archivoXML");
@@ -44,6 +53,12 @@ public class ValidadorEstructuraDocumento {
         return mensaje;
     }
 
+    /**
+     *
+     * @param archivo
+     * @param nombre
+     * @throws IllegalStateException
+     */
     protected void validarArchivo(StreamSource archivo, String nombre)
             throws IllegalStateException {
 //        if (null == archivo || archivo.length() <= 0L) {

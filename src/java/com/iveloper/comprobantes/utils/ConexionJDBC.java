@@ -6,17 +6,35 @@ import java.sql.DriverManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ *
+ * @author alexbonilla
+ */
 public class ConexionJDBC {
 
 	private Connection connection = null;
-	public static final String CONNECTION_URL = "jdbc:mysql://localhost/ce?user=ceusr&password=cepwd";
-	public static final String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
 
-	public ConexionJDBC() {
+    /**
+     *
+     */
+    public static final String CONNECTION_URL = "jdbc:mysql://localhost/ce?user=ceusr&password=cepwd";
+
+    /**
+     *
+     */
+    public static final String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
+
+    /**
+     *
+     */
+    public ConexionJDBC() {
 		connection_SQL();
 	}
 
-	public void connection_SQL() {
+    /**
+     *
+     */
+    public void connection_SQL() {
 		try {
 			Class.forName(DRIVER_CLASSNAME);
 			connection = DriverManager.getConnection(CONNECTION_URL);
@@ -26,7 +44,10 @@ public class ConexionJDBC {
 		}
 	}
 
-	public void close() {
+    /**
+     *
+     */
+    public void close() {
 		if (connection != null)
 			try {
 				connection.close();
@@ -34,7 +55,11 @@ public class ConexionJDBC {
 			}
 	}
 
-	public Connection getConnection() {
+    /**
+     *
+     * @return
+     */
+    public Connection getConnection() {
 		return connection;
 	}
 

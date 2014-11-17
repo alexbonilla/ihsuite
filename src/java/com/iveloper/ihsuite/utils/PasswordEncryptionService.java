@@ -20,6 +20,15 @@ import javax.crypto.spec.PBEKeySpec;
  */
 public class PasswordEncryptionService {
 
+    /**
+     *
+     * @param attemptedPassword
+     * @param encryptedPassword
+     * @param salt
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // Encrypt the clear-text password using the same salt that was used to
@@ -31,6 +40,14 @@ public class PasswordEncryptionService {
         return Arrays.equals(encryptedPassword, encryptedAttemptedPassword);
     }
 
+    /**
+     *
+     * @param password
+     * @param salt
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public byte[] getEncryptedPassword(String password, byte[] salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         // PBKDF2 with SHA-1 as the hashing algorithm. Note that the NIST
@@ -52,6 +69,11 @@ public class PasswordEncryptionService {
         return f.generateSecret(spec).getEncoded();
     }
 
+    /**
+     *
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
     public byte[] generateSalt() throws NoSuchAlgorithmException {
         // VERY important to use SecureRandom instead of just Random
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");

@@ -11,6 +11,10 @@ package com.iveloper.comprobantes.modelo.ws;
  */
 public class TipoAmbienteEnum {
 
+    /**
+     *
+     * @return
+     */
     public static TipoAmbienteEnum[] values() {
         return (TipoAmbienteEnum[]) $VALUES.clone();
     }
@@ -19,10 +23,22 @@ public class TipoAmbienteEnum {
         this.code = code;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCode() {
         return code;
     }
+
+    /**
+     *
+     */
     public static final TipoAmbienteEnum PRODUCCION;
+
+    /**
+     *
+     */
     public static final TipoAmbienteEnum PRUEBAS;
     private String code;
     private static final TipoAmbienteEnum $VALUES[];

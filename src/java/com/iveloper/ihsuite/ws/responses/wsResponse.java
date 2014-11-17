@@ -15,26 +15,50 @@ public class wsResponse extends wsResponseBase{
     private String LotId;
     private String LotNumber;
 
+    /**
+     *
+     * @return
+     */
     public String getDocumentId() {
         return DocumentId;
     }
 
+    /**
+     *
+     * @param DocumentId
+     */
     public void setDocumentId(String DocumentId) {
         this.DocumentId = DocumentId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLotId() {
         return LotId;
     }
 
+    /**
+     *
+     * @param LotId
+     */
     public void setLotId(String LotId) {
         this.LotId = LotId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLotNumber() {
         return LotNumber;
     }
 
+    /**
+     *
+     * @param LotNumber
+     */
     public void setLotNumber(String LotNumber) {
         this.LotNumber = LotNumber;
     }

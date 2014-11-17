@@ -20,6 +20,10 @@ import javax.net.ssl.X509TrustManager;
  */
 public class CertificadosSSL {
 
+    /**
+     *
+     * @return
+     */
     public static String instalarCertificados() {
         TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
 

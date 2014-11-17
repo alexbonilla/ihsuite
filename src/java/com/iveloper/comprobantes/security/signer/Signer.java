@@ -35,6 +35,11 @@ public class Signer extends GenericXMLSignature {
     private InputStream isToSign;
     private Certificate cert;
 
+    /**
+     *
+     * @param isToSign
+     * @param cert
+     */
     public Signer(InputStream isToSign, Certificate cert) {
         this.isToSign = isToSign;
         this.cert = cert;
@@ -56,6 +61,16 @@ public class Signer extends GenericXMLSignature {
 
     }
 
+    /**
+     *
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws CertificateException
+     * @throws IOException
+     * @throws CertStoreException
+     * @throws KeyStoreException
+     * @throws Exception
+     */
     public ByteArrayOutputStream sign() throws NoSuchAlgorithmException, CertificateException, IOException, CertStoreException, KeyStoreException, Exception {
         return execute(this.cert);
     }

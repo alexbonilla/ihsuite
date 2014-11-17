@@ -30,12 +30,23 @@ public class EnvioComprobantesWs {
     
     private static RecepcionComprobantesService service;
     
+    /**
+     *
+     * @param wsdlLocation
+     * @throws MalformedURLException
+     * @throws WebServiceException
+     */
     public EnvioComprobantesWs(String wsdlLocation) throws MalformedURLException, WebServiceException {
         URL url = new URL(wsdlLocation);
         QName qname = new QName("http://ec.gob.sri.ws.recepcion", "RecepcionComprobantesService");
         service = new RecepcionComprobantesService(url, qname);
     }
     
+    /**
+     *
+     * @param wsdlLocation
+     * @return
+     */
     public static final Object webService(String wsdlLocation) {
         try {
             QName qname = new QName("http://ec.gob.sri.ws.recepcion", "RecepcionComprobantesService");
@@ -47,6 +58,12 @@ public class EnvioComprobantesWs {
         }
     }
     
+    /**
+     *
+     * @param xmlbos
+     * @return
+     * @throws Exception
+     */
     public RespuestaSolicitud enviarComprobante(ByteArrayOutputStream xmlbos) throws Exception {
         RespuestaSolicitud response = null;
         RecepcionComprobantes port = service.getRecepcionComprobantesPort();
@@ -57,6 +74,14 @@ public class EnvioComprobantesWs {
         return response;
     }
 
+    /**
+     *
+     * @param ruc
+     * @param xml
+     * @param tipoComprobante
+     * @param versionXsd
+     * @return
+     */
     public RespuestaSolicitud enviarComprobanteLotes(String ruc, byte xml[], String tipoComprobante, String versionXsd) {
         RespuestaSolicitud response = null;
         try {
@@ -70,6 +95,14 @@ public class EnvioComprobantesWs {
         return response;
     }
 
+    /**
+     *
+     * @param ruc
+     * @param xml
+     * @param tipoComprobante
+     * @param versionXsd
+     * @return
+     */
     public RespuestaSolicitud enviarComprobanteLotes(String ruc, File xml, String tipoComprobante, String versionXsd) {
         RespuestaSolicitud response = null;
         try {
@@ -83,6 +116,11 @@ public class EnvioComprobantesWs {
         return response;
     }
 
+    /**
+     *
+     * @param respuesta
+     * @return
+     */
     public static String obtenerMensajeRespuesta(RespuestaSolicitud respuesta) {
         StringBuilder mensajeDesplegable = new StringBuilder();
         if(respuesta==null) {

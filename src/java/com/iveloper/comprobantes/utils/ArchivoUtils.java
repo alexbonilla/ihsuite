@@ -48,6 +48,12 @@ public class ArchivoUtils {
 
     private static final String configuration_path = System.getProperty("confPath");
 
+    /**
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public static byte[] convertirArchivoAByteArray(File file) throws IOException {
         byte[] buffer = new byte[(int) file.length()];
         InputStream ios = null;
@@ -87,6 +93,14 @@ public class ArchivoUtils {
         return nombreXsd;
     }
 
+    /**
+     *
+     * @param dbOperations
+     * @param tipoComprobante
+     * @param xmlis
+     * @return
+     * @throws SQLException
+     */
     public static String validarContraEsquema(ihOperations dbOperations, String tipoComprobante, InputStream xmlis) throws SQLException {
         String respuestaValidacion = null;
         String nombreXsd = seleccionaXsd(tipoComprobante);
@@ -98,6 +112,11 @@ public class ArchivoUtils {
         return respuestaValidacion;
     }
 
+    /**
+     *
+     * @param ruta
+     * @param contenido
+     */
     public static void convertirCadenaAArchivo(String ruta, String contenido) {
         FileOutputStream fop = null;
         File file;
@@ -124,6 +143,13 @@ public class ArchivoUtils {
         }
     }
 
+    /**
+     *
+     * @param autorizacion
+     * @param ruta
+     * @throws JAXBException
+     * @throws IOException
+     */
     public static void guardarDocumento(Autorizacion autorizacion, String ruta) throws JAXBException, IOException {
 
         Autorizacion objAutorizacion = new Autorizacion();
@@ -150,6 +176,14 @@ public class ArchivoUtils {
 
     }
 
+    /**
+     *
+     * @param xmlSource
+     * @return
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @throws IOException
+     */
     public static Document stringToDom(String xmlSource)
             throws SAXException, ParserConfigurationException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -157,6 +191,16 @@ public class ArchivoUtils {
         return builder.parse(new InputSource(new StringReader(xmlSource)));
     }
 
+    /**
+     *
+     * @param xmlString
+     * @return
+     * @throws TransformerConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
+     * @throws IOException
+     */
     public static InputStream xmlStringToInputStream(String xmlString) throws TransformerConfigurationException, SAXException, TransformerException, ParserConfigurationException, IOException {
         Logger.getLogger(ArchivoUtils.class.getName()).log(Level.INFO, "Convirtiendo xmlString en InputStream.");
         Document xmlDoc = stringToDom(xmlString);
@@ -168,6 +212,16 @@ public class ArchivoUtils {
         return is;
     }
     
+    /**
+     *
+     * @param xmlString
+     * @return
+     * @throws TransformerConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
+     * @throws IOException
+     */
     public static ByteArrayOutputStream xmlStringToByteArrayOutputStream(String xmlString) throws TransformerConfigurationException, SAXException, TransformerException, ParserConfigurationException, IOException {
         Logger.getLogger(ArchivoUtils.class.getName()).log(Level.INFO, "Convirtiendo xmlString en ByteArrayOutputStream.");
         Document xmlDoc = stringToDom(xmlString);

@@ -11,5 +11,29 @@ package com.iveloper.ihsuite.utils;
  * @author Alex
  */
 public enum SriTipoComprobante {
-    Factura,NotaCredito,NotaDebito,GuiaRemision,ComprobanteRetencion;
+
+    /**
+     *
+     */
+    Factura,
+
+    /**
+     *
+     */
+    NotaCredito,
+
+    /**
+     *
+     */
+    NotaDebito,
+
+    /**
+     *
+     */
+    GuiaRemision,
+
+    /**
+     *
+     */
+    ComprobanteRetencion;
 }

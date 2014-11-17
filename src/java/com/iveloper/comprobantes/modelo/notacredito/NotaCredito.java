@@ -30,54 +30,102 @@ public class NotaCredito {
     private List<CampoAdicional> CampoAdicional;
     private List<Detalle> detalle;
 
+    /**
+     *
+     * @return
+     */
     @XmlAttribute
     public String getVersion() {
         return version;
     }
 
+    /**
+     *
+     * @param version
+     */
     public void setVersion(String version) {
         this.version = version;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlAttribute
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public InfoTributaria getInfoTributaria() {
         return infoTributaria;
     }
 
+    /**
+     *
+     * @param infoTributaria
+     */
     public void setInfoTributaria(InfoTributaria infoTributaria) {
         this.infoTributaria = infoTributaria;
     }
 
+    /**
+     *
+     * @return
+     */
     public InfoNotaCredito getInfoNotaCredito() {
         return infoNotaCredito;
     }
 
+    /**
+     *
+     * @param infoNotaCredito
+     */
     public void setInfoNotaCredito(InfoNotaCredito infoNotaCredito) {
         this.infoNotaCredito = infoNotaCredito;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name = "infoAdicional")
     public List<CampoAdicional> getCampoAdicional() {
         return CampoAdicional;
     }
 
+    /**
+     *
+     * @param CampoAdicional
+     */
     public void setCampoAdicional(List<CampoAdicional> CampoAdicional) {
         this.CampoAdicional = CampoAdicional;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name="detalles")
     public List<Detalle> getDetalle() {
         return detalle;
     }
 
+    /**
+     *
+     * @param detalle
+     */
     public void setDetalle(List<Detalle> detalle) {
         this.detalle = detalle;
     }

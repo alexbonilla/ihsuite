@@ -16,18 +16,34 @@ public class wsResponseBase {
     private List<String> MessageException;
     private boolean Processed;
 
+    /**
+     *
+     * @return
+     */
     public List<String> getMessageException() {
         return MessageException;
     }
 
+    /**
+     *
+     * @param MessageException
+     */
     public void setMessageException(List<String> MessageException) {
         this.MessageException = MessageException;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isProcessed() {
         return Processed;
     }
 
+    /**
+     *
+     * @param Processed
+     */
     public void setProcessed(boolean Processed) {
         this.Processed = Processed;
     }

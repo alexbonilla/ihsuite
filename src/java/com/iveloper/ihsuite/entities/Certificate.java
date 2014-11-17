@@ -20,42 +20,82 @@ public class Certificate {
     private String pass;
     private Date expirationDate;
 
+    /**
+     *
+     * @return
+     */
     public String getEntity() {
         return entity;
     }
 
+    /**
+     *
+     * @param entity
+     */
     public void setEntity(String entity) {
         this.entity = entity;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public InputStream getContent() {
         return content;
     }
 
+    /**
+     *
+     * @param content
+     */
     public void setContent(InputStream content) {
         this.content = content;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPass() {
         return pass;
     }
 
+    /**
+     *
+     * @param pass
+     */
     public void setPass(String pass) {
         this.pass = pass;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getExpirationDate() {
         return expirationDate;
     }
 
+    /**
+     *
+     * @param expirationDate
+     */
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }

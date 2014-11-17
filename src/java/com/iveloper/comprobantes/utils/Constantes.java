@@ -12,9 +12,20 @@ package com.iveloper.comprobantes.utils;
  */
 public class Constantes {
 
+    /**
+     *
+     */
     public static String PKCS12_RESOURCE;
+
+    /**
+     *
+     */
     public static String PKCS12_PASSWORD;
 
+    /**
+     *
+     * @return
+     */
     public static String getRutaFirma() {
         if (PKCS12_RESOURCE == null || PKCS12_RESOURCE.isEmpty()) {
             PKCS12_RESOURCE = "C:\\Users\\Alex\\Documents\\certificado\\alex_fernando_bonilla_gordillo.p12"; //Ruta de archivo de claves

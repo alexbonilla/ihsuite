@@ -16,6 +16,12 @@ import java.util.logging.Logger;
  */
 public class WSUtil {
 
+    /**
+     *
+     * @param ambiente
+     * @param nombreServicio
+     * @return
+     */
     public static String devuelveUrlWs(String ambiente, String nombreServicio) {
         StringBuilder url = new StringBuilder();
         String direccionIPServicio = null;

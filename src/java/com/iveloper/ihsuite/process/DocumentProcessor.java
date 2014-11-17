@@ -50,26 +50,50 @@ public class DocumentProcessor implements Runnable {
     private String ambiente;
     private ihOperations dbOperations;
 
+    /**
+     *
+     * @return
+     */
     public SuiteDocument getSdoc() {
         return sdoc;
     }
 
+    /**
+     *
+     * @param sdoc
+     */
     public void setSdoc(SuiteDocument sdoc) {
         this.sdoc = sdoc;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getAmbiente() {
         return ambiente;
     }
 
+    /**
+     *
+     * @param ambiente
+     */
     public void setAmbiente(String ambiente) {
         this.ambiente = ambiente;
     }
 
+    /**
+     *
+     * @return
+     */
     public ihOperations getDbOperations() {
         return dbOperations;
     }
 
+    /**
+     *
+     * @param dbOperations
+     */
     public void setDbOperations(ihOperations dbOperations) {
         this.dbOperations = dbOperations;
     }
@@ -148,6 +172,14 @@ public class DocumentProcessor implements Runnable {
         Logger.getLogger(DocumentProcessor.class.getName()).log(Level.INFO, "Detalles: {0}", msgAutorizacion.toString());
     }
 
+    /**
+     *
+     * @param sdoc
+     * @param ambiente
+     * @return
+     * @throws MalformedURLException
+     * @throws Exception
+     */
     public RespuestaSolicitud enviarComprobante(SuiteDocument sdoc, String ambiente) throws MalformedURLException, Exception {
         CertificadosSSL.instalarCertificados();
         EnvioComprobantesWs ec = new EnvioComprobantesWs(WSUtil.devuelveUrlWs(ambiente, "RecepcionComprobantes"));
@@ -155,6 +187,14 @@ public class DocumentProcessor implements Runnable {
         return response;
     }
 
+    /**
+     *
+     * @param claveDeAcceso
+     * @param tipoAmbiente
+     * @return
+     * @throws JAXBException
+     * @throws IOException
+     */
     public Autorizacion autorizarComprobanteIndividual(String claveDeAcceso, String tipoAmbiente) throws JAXBException, IOException {
         CertificadosSSL.instalarCertificados();
         RespuestaComprobante respuesta = (new AutorizacionComprobantesWs(WSUtil.devuelveUrlWs(tipoAmbiente, "AutorizacionComprobantes"))).llamadaWSAutorizacionInd(claveDeAcceso);
@@ -167,6 +207,15 @@ public class DocumentProcessor implements Runnable {
         return aut;
     }
 
+    /**
+     *
+     * @param sdoc
+     * @return
+     * @throws JAXBException
+     * @throws SAXException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     */
     public String getClaveAcceso(SuiteDocument sdoc) throws JAXBException, SAXException, IOException, ParserConfigurationException {
         String claveacceso = null;
         switch (sdoc.getDocTypeCode()) {
@@ -187,6 +236,11 @@ public class DocumentProcessor implements Runnable {
         return claveacceso;
     }
 
+    /**
+     *
+     * @param aut
+     * @return
+     */
     public ByteArrayOutputStream convertAutorizacionToByteArrayOutputStream(Autorizacion aut) {
         try {
             com.iveloper.comprobantes.autorizacion.Autorizacion autorizacion = new com.iveloper.comprobantes.autorizacion.Autorizacion();

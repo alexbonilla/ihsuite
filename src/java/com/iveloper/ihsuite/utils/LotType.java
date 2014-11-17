@@ -11,5 +11,14 @@ package com.iveloper.ihsuite.utils;
  * @author Alex
  */
 public enum LotType {
-    Unitario, Multiple;
+
+    /**
+     *
+     */
+    Unitario,
+
+    /**
+     *
+     */
+    Multiple;
 }

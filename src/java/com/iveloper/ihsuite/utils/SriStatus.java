@@ -97,6 +97,9 @@ package com.iveloper.ihsuite.utils;
 //}
 public enum SriStatus {
 
+    /**
+     *
+     */
     Autorizada {
                 String descripcion = "AUTORIZADO";
 
@@ -110,6 +113,10 @@ public enum SriStatus {
                     this.descripcion = descripcion;
                 }
             },
+
+    /**
+     *
+     */
     Cancelada {
                 String descripcion = "CANCELADO";
 
@@ -123,6 +130,10 @@ public enum SriStatus {
                     this.descripcion = descripcion;
                 }
             },
+
+    /**
+     *
+     */
     Devuelta {
                 String descripcion = "DEVUELTA";
 
@@ -136,6 +147,10 @@ public enum SriStatus {
                     this.descripcion = descripcion;
                 }
             },
+
+    /**
+     *
+     */
     NoAutorizada {
                 String descripcion = "RECHAZADO";
 
@@ -149,6 +164,10 @@ public enum SriStatus {
                     this.descripcion = descripcion;
                 }
             },
+
+    /**
+     *
+     */
     NoProcesada {
                 String descripcion = "NO PROCESADO";
 
@@ -162,6 +181,10 @@ public enum SriStatus {
                     this.descripcion = descripcion;
                 }
             },
+
+    /**
+     *
+     */
     Recibida {
                 String descripcion = "RECIBIDA";
 
@@ -176,10 +199,23 @@ public enum SriStatus {
                 }
             };
 
+    /**
+     *
+     * @return
+     */
     public abstract String getDescripcion();
 
+    /**
+     *
+     * @param descripcion
+     */
     public abstract void setDescripcion(String descripcion);
 
+    /**
+     *
+     * @param valor
+     * @return
+     */
     public static SriStatus retornaSriStatus(String valor) {
         SriStatus status = null;
         if (valor.equals(Autorizada.getDescripcion())) {

@@ -11,5 +11,14 @@ package com.iveloper.ihsuite.utils;
  * @author Alex
  */
 public enum SriTypeEmission {
-    normal, contingencia;
+
+    /**
+     *
+     */
+    normal,
+
+    /**
+     *
+     */
+    contingencia;
 }

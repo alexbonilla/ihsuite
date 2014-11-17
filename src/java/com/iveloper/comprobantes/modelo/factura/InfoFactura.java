@@ -38,86 +38,170 @@ public class InfoFactura {
     private BigDecimal importeTotal;
     private String moneda;
 
+    /**
+     *
+     * @return
+     */
     public String getFechaEmision() {
         return fechaEmision;
     }
 
+    /**
+     *
+     * @param fechaEmision
+     */
     public void setFechaEmision(String fechaEmision) {
         this.fechaEmision = fechaEmision;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDirEstablecimiento() {
         return dirEstablecimiento;
     }
 
+    /**
+     *
+     * @param dirEstablecimiento
+     */
     public void setDirEstablecimiento(String dirEstablecimiento) {
         this.dirEstablecimiento = dirEstablecimiento;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getContribuyenteEspecial() {
         return contribuyenteEspecial;
     }
 
+    /**
+     *
+     * @param contribuyenteEspecial
+     */
     public void setContribuyenteEspecial(String contribuyenteEspecial) {
         this.contribuyenteEspecial = contribuyenteEspecial;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getObligadoContabilidad() {
         return obligadoContabilidad;
     }
 
+    /**
+     *
+     * @param obligadoContabilidad
+     */
     public void setObligadoContabilidad(String obligadoContabilidad) {
         this.obligadoContabilidad = obligadoContabilidad;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTipoIdentificacionComprador() {
         return tipoIdentificacionComprador;
     }
 
+    /**
+     *
+     * @param tipoIdentificacionComprador
+     */
     public void setTipoIdentificacionComprador(String tipoIdentificacionComprador) {
         this.tipoIdentificacionComprador = tipoIdentificacionComprador;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getGuiaRemision() {
         return guiaRemision;
     }
 
+    /**
+     *
+     * @param guiaRemision
+     */
     public void setGuiaRemision(String guiaRemision) {
         this.guiaRemision = guiaRemision;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getRazonSocialComprador() {
         return razonSocialComprador;
     }
 
+    /**
+     *
+     * @param razonSocialComprador
+     */
     public void setRazonSocialComprador(String razonSocialComprador) {
         this.razonSocialComprador = razonSocialComprador;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getIdentificacionComprador() {
         return identificacionComprador;
     }
 
+    /**
+     *
+     * @param identificacionComprador
+     */
     public void setIdentificacionComprador(String identificacionComprador) {
         this.identificacionComprador = identificacionComprador;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getTotalSinImpuestos() {
         return totalSinImpuestos;
     }
 
+    /**
+     *
+     * @param totalSinImpuestos
+     */
     public void setTotalSinImpuestos(BigDecimal totalSinImpuestos) {
         this.totalSinImpuestos = totalSinImpuestos;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getTotalDescuento() {
         return totalDescuento;
     }
 
+    /**
+     *
+     * @param totalDescuento
+     */
     public void setTotalDescuento(BigDecimal totalDescuento) {
         this.totalDescuento = totalDescuento;
     }
     
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name = "totalConImpuestos")
     public List<TotalImpuesto> getTotalImpuesto() {
         if (totalImpuesto == null) {
@@ -126,32 +210,58 @@ public class InfoFactura {
         return totalImpuesto;
     }
 
+    /**
+     *
+     * @param totalImpuesto
+     */
     public void setTotalConImpuesto(List<TotalImpuesto> totalImpuesto) {
         this.totalImpuesto = totalImpuesto;
     }
 
-
-
+    /**
+     *
+     * @return
+     */
     public BigDecimal getPropina() {
         return propina;
     }
 
+    /**
+     *
+     * @param propina
+     */
     public void setPropina(BigDecimal propina) {
         this.propina = propina;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getImporteTotal() {
         return importeTotal;
     }
 
+    /**
+     *
+     * @param importeTotal
+     */
     public void setImporteTotal(BigDecimal importeTotal) {
         this.importeTotal = importeTotal;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMoneda() {
         return moneda;
     }
 
+    /**
+     *
+     * @param moneda
+     */
     public void setMoneda(String moneda) {
         this.moneda = moneda;
     }

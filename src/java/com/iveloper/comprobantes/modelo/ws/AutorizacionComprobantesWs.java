@@ -21,12 +21,22 @@ public class AutorizacionComprobantesWs {
 
     private final AutorizacionComprobantesService service;
 
+    /**
+     *
+     * @param wsdlLocation
+     * @throws MalformedURLException
+     */
     public AutorizacionComprobantesWs(String wsdlLocation) throws MalformedURLException {
 
         service = new AutorizacionComprobantesService(new URL(wsdlLocation), new QName("http://ec.gob.sri.ws.autorizacion", "AutorizacionComprobantesService"));
 
     }
 
+    /**
+     *
+     * @param claveDeAcceso
+     * @return
+     */
     public RespuestaComprobante llamadaWSAutorizacionInd(String claveDeAcceso) {
 
         AutorizacionComprobantes port = service.getAutorizacionComprobantesPort();

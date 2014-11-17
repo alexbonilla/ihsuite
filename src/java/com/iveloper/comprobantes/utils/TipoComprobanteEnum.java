@@ -11,6 +11,10 @@ package com.iveloper.comprobantes.utils;
  */
 public class TipoComprobanteEnum {
     
+    /**
+     *
+     * @return
+     */
     public static TipoComprobanteEnum[] values() {
         return (TipoComprobanteEnum[]) $VALUES.clone();
     }
@@ -25,18 +29,35 @@ public class TipoComprobanteEnum {
         this.descripcion = descripcion;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getXsd() {
         return xsd;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     *
+     * @param valor
+     * @return
+     */
     public static String retornaCodigo(String valor) {
         String codigo = null;
         if (valor.equals(FACTURA.getDescripcion())) {
@@ -54,12 +75,40 @@ public class TipoComprobanteEnum {
         }
         return codigo;
     }
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum LOTE;
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum FACTURA;
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum NOTA_DE_CREDITO;
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum NOTA_DE_DEBITO;
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum GUIA_DE_REMISION;
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum COMPROBANTE_DE_RETENCION;
+
+    /**
+     *
+     */
     public static final TipoComprobanteEnum LIQUIDACION_DE_COMPRAS;
     private String code;
     private String xsd;

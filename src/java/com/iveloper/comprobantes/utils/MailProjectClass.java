@@ -26,11 +26,21 @@ import javax.mail.internet.MimeMultipart;
  */
 public class MailProjectClass {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         MailProjectClass e = new MailProjectClass();
         e.enviarCorreo("alexfbonilla@hotmail.com", "C:\\Users\\Alex\\Downloads\\autorizado\\", "1203201401091381445500110010010000009221234432113.xml");
     }
 
+    /**
+     *
+     * @param destinatario
+     * @param ruta_archivo
+     * @param nombre_archivo
+     */
     public static void enviarCorreo(String destinatario, String ruta_archivo, String nombre_archivo) {
 
         final String username = "afbonilla@gmail.com";

@@ -28,18 +28,41 @@ import java.util.UUID;
  */
 public class ihOperations extends dbConnector {
 
+    /**
+     *
+     * @param configuration_path
+     * @throws IOException
+     */
     public ihOperations(String configuration_path) throws IOException {
         super(configuration_path);
     }
 
+    /**
+     *
+     * @param configuration_path
+     * @param dbid
+     * @throws IOException
+     */
     public ihOperations(String configuration_path, String dbid) throws IOException {
         super(configuration_path, dbid);
     }
 
+    /**
+     *
+     * @param configuration_path
+     * @param dbid
+     * @throws IOException
+     */
     public ihOperations(String configuration_path, int dbid) throws IOException {
         super(configuration_path, dbid);
     }
 
+    /**
+     *
+     * @param typeLot
+     * @return
+     * @throws SQLException
+     */
     public Lot createLot(LotType typeLot) throws SQLException {
 
         Lot lot = new Lot();
@@ -56,6 +79,12 @@ public class ihOperations extends dbConnector {
 
     }
 
+    /**
+     *
+     * @param doctype
+     * @return
+     * @throws SQLException
+     */
     public InputStream getSchemaValidator(String doctype) throws SQLException {
         InputStream xsd = null;
         PreparedStatement ps = connection.prepareStatement("SELECT content FROM validators WHERE docname = ?;");
@@ -70,6 +99,12 @@ public class ihOperations extends dbConnector {
         return xsd;
     }
 
+    /**
+     *
+     * @param entity
+     * @return
+     * @throws SQLException
+     */
     public Certificate getDigitalCertificate(String entity) throws SQLException {
         Certificate cert = new Certificate();
         PreparedStatement ps = connection.prepareStatement("SELECT * FROM certificates WHERE entity = ?;");
@@ -92,6 +127,12 @@ public class ihOperations extends dbConnector {
         return cert;
     }
 
+    /**
+     *
+     * @param sdoc
+     * @return
+     * @throws SQLException
+     */
     public int createSuiteDocument(SuiteDocument sdoc) throws SQLException {
 //        param_documentid, param_lotid, param_datecreated, param_document, param_docapprefcode, 
 //        param_doctypecode, param_docnum, param_reference, param_docref, param_notifyname, 
@@ -115,6 +156,13 @@ public class ihOperations extends dbConnector {
 
     }
 
+    /**
+     *
+     * @param documentid
+     * @param status
+     * @return
+     * @throws SQLException
+     */
     public int updateSuiteDocumentStatus(String documentid, String status) throws SQLException {
         CallableStatement cs = connection.prepareCall("call UPDATE_SUITEDOCUMENT_STATUS(?,?,?);");
         cs.setString(1, documentid);
@@ -126,6 +174,14 @@ public class ihOperations extends dbConnector {
 
     }
 
+    /**
+     *
+     * @param documentid
+     * @param document
+     * @param status
+     * @return
+     * @throws SQLException
+     */
     public int updateSuiteDocumentContent(String documentid, byte[] document, String status) throws SQLException {
         System.out.println("Document size " + document.length);
         CallableStatement cs = connection.prepareCall("call UPDATE_SUITEDOCUMENT_CONTENT(?,?,?);");
@@ -138,6 +194,16 @@ public class ihOperations extends dbConnector {
 
     }
 
+    /**
+     *
+     * @param documentid
+     * @param document
+     * @param status
+     * @param documentAutorizacion
+     * @param documentAutorizacionDate
+     * @return
+     * @throws SQLException
+     */
     public int updateSuiteDocumentAutorizacion(String documentid, byte[] document, String status, String documentAutorizacion, Date documentAutorizacionDate) throws SQLException {
         System.out.println("Document size " + document.length);
         CallableStatement cs = connection.prepareCall("call UPDATE_SUITEDOCUMENT_AUTORIZACION(?,?,?,?,?);");
@@ -151,6 +217,12 @@ public class ihOperations extends dbConnector {
         return result;
     }
 
+    /**
+     *
+     * @param documentid
+     * @return
+     * @throws SQLException
+     */
     public DocFacInstance getDocFacInstance(String documentid) throws SQLException {
         //documentid, lotid, datecreated, document, 
         //docapprefcode , doctypecode, docnum, reference,

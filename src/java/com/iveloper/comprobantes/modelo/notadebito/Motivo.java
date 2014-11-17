@@ -12,21 +12,44 @@ import java.math.BigDecimal;
  */
 public class Motivo {
 
+    /**
+     *
+     */
     protected String razon;
+
+    /**
+     *
+     */
     protected BigDecimal valor;
 
+    /**
+     *
+     * @return
+     */
     public String getRazon() {
         return razon;
     }
 
+    /**
+     *
+     * @param razon
+     */
     public void setRazon(String razon) {
         this.razon = razon;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getValor() {
         return valor;
     }
 
+    /**
+     *
+     * @param valor
+     */
     public void setValor(BigDecimal valor) {
         this.valor = valor;
     }

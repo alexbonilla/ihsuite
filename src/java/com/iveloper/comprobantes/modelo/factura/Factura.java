@@ -31,40 +31,76 @@ public class Factura {
     private List<CampoAdicional> campoAdicional;
     private List<Detalle> detalle;
 
+    /**
+     *
+     * @return
+     */
     @XmlAttribute
     public String getVersion() {
         return version;
     }
 
+    /**
+     *
+     * @param version
+     */
     public void setVersion(String version) {
         this.version = version;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlAttribute
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public InfoTributaria getInfoTributaria() {
         return infoTributaria;
     }
 
+    /**
+     *
+     * @param infoTributaria
+     */
     public void setInfoTributaria(InfoTributaria infoTributaria) {
         this.infoTributaria = infoTributaria;
     }
 
+    /**
+     *
+     * @return
+     */
     public InfoFactura getInfoFactura() {
         return infoFactura;
     }
 
+    /**
+     *
+     * @param infoFactura
+     */
     public void setInfoFactura(InfoFactura infoFactura) {
         this.infoFactura = infoFactura;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name = "infoAdicional")
     public List<CampoAdicional> getCampoAdicional() {
         if (campoAdicional == null) {
@@ -73,10 +109,18 @@ public class Factura {
         return campoAdicional;
     }
 
+    /**
+     *
+     * @param CampoAdicional
+     */
     public void setCampoAdicional(List<CampoAdicional> CampoAdicional) {
         this.campoAdicional = CampoAdicional;
     }
 
+    /**
+     *
+     * @return
+     */
     @XmlElementWrapper(name = "detalles")
     public List<Detalle> getDetalle() {
         if (detalle == null) {
@@ -85,6 +129,10 @@ public class Factura {
         return detalle;
     }
 
+    /**
+     *
+     * @param detalle
+     */
     public void setDetalle(List<Detalle> detalle) {
         this.detalle = detalle;
     }

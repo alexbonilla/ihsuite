@@ -37,74 +37,146 @@ public class SendFileEmail implements Runnable {
     private DataSource source = null;
     private String filename;
 
+    /**
+     *
+     * @return
+     */
     public String getTo() {
         return to;
     }
 
+    /**
+     *
+     * @param to
+     */
     public void setTo(String to) {
         this.to = to;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFrom() {
         return from;
     }
 
+    /**
+     *
+     * @param from
+     */
     public void setFrom(String from) {
         this.from = from;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     *
+     * @param user
+     */
     public void setUser(String user) {
         this.user = user;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPwd() {
         return pwd;
     }
 
+    /**
+     *
+     * @param pwd
+     */
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getHost() {
         return host;
     }
 
+    /**
+     *
+     * @param host
+     */
     public void setHost(String host) {
         this.host = host;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessageSubject() {
         return messageSubject;
     }
 
+    /**
+     *
+     * @param messageSubject
+     */
     public void setMessageSubject(String messageSubject) {
         this.messageSubject = messageSubject;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessageBody() {
         return messageBody;
     }
 
+    /**
+     *
+     * @param messageBody
+     */
     public void setMessageBody(String messageBody) {
         this.messageBody = messageBody;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataSource getSource() {
         return source;
     }
 
+    /**
+     *
+     * @param source
+     */
     public void setSource(DataSource source) {
         this.source = source;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFilename() {
         return filename;
     }
 
+    /**
+     *
+     * @param filename
+     */
     public void setFilename(String filename) {
         this.filename = filename;
     }

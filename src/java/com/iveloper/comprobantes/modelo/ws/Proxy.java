@@ -11,9 +11,21 @@ package com.iveloper.comprobantes.modelo.ws;
  */
 public class Proxy {
 
+    /**
+     *
+     */
     public Proxy() {
     }
 
+    /**
+     *
+     * @param url
+     * @param puerto
+     * @param usuario
+     * @param clave
+     * @param wsProduccion
+     * @param wsPruebas
+     */
     public Proxy(String url, Integer puerto, String usuario, String clave, String wsProduccion, String wsPruebas) {
         this.url = url;
         this.puerto = puerto;
@@ -23,50 +35,98 @@ public class Proxy {
         this.wsPruebas = wsPruebas;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     *
+     * @param url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getPuerto() {
         return puerto;
     }
 
+    /**
+     *
+     * @param puerto
+     */
     public void setPuerto(Integer puerto) {
         this.puerto = puerto;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUsuario() {
         return usuario;
     }
 
+    /**
+     *
+     * @param usuario
+     */
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getClave() {
         return clave;
     }
 
+    /**
+     *
+     * @param clave
+     */
     public void setClave(String clave) {
         this.clave = clave;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getWsProduccion() {
         return wsProduccion;
     }
 
+    /**
+     *
+     * @param wsProduccion
+     */
     public void setWsProduccion(String wsProduccion) {
         this.wsProduccion = wsProduccion;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getWsPruebas() {
         return wsPruebas;
     }
 
+    /**
+     *
+     * @param wsPruebas
+     */
     public void setWsPruebas(String wsPruebas) {
         this.wsPruebas = wsPruebas;
     }
