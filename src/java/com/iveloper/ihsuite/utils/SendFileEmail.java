@@ -32,6 +32,7 @@ public class SendFileEmail implements Runnable {
     private String user;
     private String pwd;
     private String host;
+    private String port;
     private String messageSubject;
     private String messageBody;
     private DataSource source = null;
@@ -117,6 +118,14 @@ public class SendFileEmail implements Runnable {
         this.host = host;
     }
 
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
     /**
      *
      * @return
@@ -190,6 +199,7 @@ public class SendFileEmail implements Runnable {
         properties.setProperty("mail.user", user);
         properties.setProperty("mail.password", pwd);
         properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.smtp.port", port);
 
         Session session = Session.getDefaultInstance(properties);
 

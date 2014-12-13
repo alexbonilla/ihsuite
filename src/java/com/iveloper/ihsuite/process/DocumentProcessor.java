@@ -12,6 +12,8 @@ import com.iveloper.comprobantes.utils.CertificadosSSL;
 import com.iveloper.ihsuite.db.ihOperations;
 import com.iveloper.ihsuite.entities.SuiteDocument;
 import com.iveloper.ihsuite.utils.WSUtil;
+import com.iveloper.portal.controllers.DocumentsJpaController;
+import com.iveloper.portal.entities.Documents;
 import ec.gob.sri.comprobantes.ws.RespuestaSolicitud;
 import ec.gob.sri.comprobantes.ws.aut.Autorizacion;
 import ec.gob.sri.comprobantes.ws.aut.Mensaje;
@@ -28,6 +30,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.transaction.UserTransaction;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -49,6 +56,32 @@ public class DocumentProcessor implements Runnable {
     private SuiteDocument sdoc;
     private String ambiente;
     private ihOperations dbOperations;
+    private Documents document;
+    private String userEntityId;
+
+    public int getTIEMPO_ESPERA_SOLICITAR_AUTORIZACION() {
+        return TIEMPO_ESPERA_SOLICITAR_AUTORIZACION;
+    }
+
+    public void setTIEMPO_ESPERA_SOLICITAR_AUTORIZACION(int TIEMPO_ESPERA_SOLICITAR_AUTORIZACION) {
+        this.TIEMPO_ESPERA_SOLICITAR_AUTORIZACION = TIEMPO_ESPERA_SOLICITAR_AUTORIZACION;
+    }
+
+    public Documents getDocument() {
+        return document;
+    }
+
+    public void setDocument(Documents document) {
+        this.document = document;
+    }
+
+    public String getUserEntityId() {
+        return userEntityId;
+    }
+
+    public void setUserEntityId(String userEntityId) {
+        this.userEntityId = userEntityId;
+    }
 
     /**
      *
@@ -105,12 +138,25 @@ public class DocumentProcessor implements Runnable {
 
     private void completeProcess() {
         try {
-            dbOperations.connect();
-            RespuestaSolicitud resultadoRecepcion = enviarComprobante(sdoc, ambiente);
+//            if (sdoc != null) {
+//                dbOperations.connect();
+//            }
+//            RespuestaSolicitud resultadoRecepcion = enviarComprobante(sdoc, ambiente);
+            RespuestaSolicitud resultadoRecepcion = enviarComprobante(document, ambiente);
             Logger.getLogger(DocumentProcessor.class.getName()).log(Level.INFO, "Estado de documento: {0}.", resultadoRecepcion.getEstado());
             Logger.getLogger(DocumentProcessor.class.getName()).log(Level.INFO, "Detalle: {0}.", EnvioComprobantesWs.obtenerMensajeRespuesta(resultadoRecepcion));
-            dbOperations.updateSuiteDocumentStatus(sdoc.getDocumentId().toString(), resultadoRecepcion.getEstado());
-            String claveacceso = getClaveAcceso(sdoc);
+
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("ihsuite" + userEntityId + "PU");
+            Context c = new InitialContext();
+            UserTransaction utx = (UserTransaction) c.lookup("java:comp/UserTransaction");
+            DocumentsJpaController documentsController = new DocumentsJpaController(utx, emf);
+            document.setDocstatus(resultadoRecepcion.getEstado());
+            document.setStatuschanged(new Date());
+
+            documentsController.edit(document);
+//            dbOperations.updateSuiteDocumentStatus(sdoc.getDocumentId().toString(), resultadoRecepcion.getEstado());
+//            String claveacceso = getClaveAcceso(sdoc);
+            String claveacceso = getClaveAcceso(document);
             if (resultadoRecepcion.getEstado().equals("RECIBIDA")) {
                 Thread.sleep(TIEMPO_ESPERA_SOLICITAR_AUTORIZACION);
                 Autorizacion autComprobanteIndividual = autorizarComprobanteIndividual(claveacceso, ambiente);
@@ -118,15 +164,26 @@ public class DocumentProcessor implements Runnable {
                 if (autComprobanteIndividual.getEstado().equals("AUTORIZADO")) {
                     String docAutorizacion = autComprobanteIndividual.getNumeroAutorizacion();
                     Date docAutorizacionDate = autComprobanteIndividual.getFechaAutorizacion().toGregorianCalendar().getTime();
-                    dbOperations
-                            .updateSuiteDocumentAutorizacion(sdoc.getDocumentId().toString(), documento, autComprobanteIndividual.getEstado(), docAutorizacion, docAutorizacionDate);
+                    document.setDocument(documento);
+                    document.setDocstatus(autComprobanteIndividual.getEstado());
+                    document.setDocautorizacion(docAutorizacion);
+                    document.setDocautorizaciondate(docAutorizacionDate);
+
+                    documentsController.edit(document);
+
+//                    dbOperations
+//                            .updateSuiteDocumentAutorizacion(sdoc.getDocumentId().toString(), documento, autComprobanteIndividual.getEstado(), docAutorizacion, docAutorizacionDate);
                 } else {
-                    dbOperations.updateSuiteDocumentContent(sdoc.getDocumentId().toString(), documento, autComprobanteIndividual.getEstado());
+                    document.setDocument(documento);
+                    document.setDocstatus(autComprobanteIndividual.getEstado());
+
+                    documentsController.edit(document);
+//                    dbOperations.updateSuiteDocumentContent(sdoc.getDocumentId().toString(), documento, autComprobanteIndividual.getEstado());
                 }
 
                 verifyAuthorizationLog(autComprobanteIndividual);
             }
-            dbOperations.disconnect();
+//            dbOperations.disconnect();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DocumentProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -187,6 +244,15 @@ public class DocumentProcessor implements Runnable {
         return response;
     }
 
+    public RespuestaSolicitud enviarComprobante(Documents document, String ambiente) throws MalformedURLException, Exception {
+        CertificadosSSL.instalarCertificados();
+        EnvioComprobantesWs ec = new EnvioComprobantesWs(WSUtil.devuelveUrlWs(ambiente, "RecepcionComprobantes"));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(document.getDocument().length);
+        baos.write(document.getDocument(), 0, document.getDocument().length);
+        RespuestaSolicitud response = ec.enviarComprobante(baos);
+        return response;
+    }
+
     /**
      *
      * @param claveDeAcceso
@@ -224,6 +290,26 @@ public class DocumentProcessor implements Runnable {
                 dbf.setNamespaceAware(true);
                 DocumentBuilder db = dbf.newDocumentBuilder();
                 Document doc = db.parse(new InputSource(new ByteArrayInputStream(sdoc.getBos().toByteArray())));
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Factura.class});
+                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+                Factura factura = (Factura) unmarshaller.unmarshal(doc);
+                claveacceso = factura.getInfoTributaria().getClaveAcceso();
+                break;
+        }
+        Logger.getLogger(DocumentProcessor.class.getName()).log(Level.INFO, "Clave de acceso: {0}", claveacceso);
+        return claveacceso;
+    }
+
+    public String getClaveAcceso(Documents document) throws JAXBException, SAXException, IOException, ParserConfigurationException {
+        String claveacceso = null;
+        switch (document.getDoctypecode()) {
+            case "01":
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                dbf.setNamespaceAware(true);
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                Document doc = db.parse(new InputSource(new ByteArrayInputStream(document.getDocument())));
 
                 JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Factura.class});
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

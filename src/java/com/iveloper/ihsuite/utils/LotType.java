@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.iveloper.ihsuite.utils;
 
 /**
@@ -15,10 +14,26 @@ public enum LotType {
     /**
      *
      */
-    Unitario,
+    Unitario {
 
+                @Override
+
+                public String toString() {
+                    return "Unitario";
+                }
+
+            },
     /**
      *
      */
-    Multiple;
+    Multiple {
+
+                @Override
+
+                public String toString() {
+                    return "Multiple";
+                }
+
+            };
+
 }

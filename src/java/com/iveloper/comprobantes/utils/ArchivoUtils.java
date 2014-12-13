@@ -75,7 +75,7 @@ public class ArchivoUtils {
         return buffer;
     }
 
-    private static String seleccionaXsd(String tipo) {
+    public static String seleccionaXsd(String tipo) {
         String nombreXsd = null;
         if (tipo.equals(TipoComprobanteEnum.FACTURA.getCode())) {
             nombreXsd = TipoComprobanteEnum.FACTURA.getXsd();

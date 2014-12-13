@@ -10,6 +10,7 @@ package com.iveloper.comprobantes.security.signer;
  * @author Alex
  */
 import com.iveloper.ihsuite.entities.Certificate;
+import com.iveloper.portal.entities.Certificates;
 import es.mityc.firmaJava.libreria.xades.DataToSign;
 import es.mityc.firmaJava.libreria.xades.EnumFormatoFirma;
 import es.mityc.firmaJava.libreria.xades.XAdESSchemas;
@@ -34,6 +35,7 @@ public class Signer extends GenericXMLSignature {
 
     private InputStream isToSign;
     private Certificate cert;
+    private Certificates certificate;
 
     /**
      *
@@ -43,6 +45,11 @@ public class Signer extends GenericXMLSignature {
     public Signer(InputStream isToSign, Certificate cert) {
         this.isToSign = isToSign;
         this.cert = cert;
+    }
+
+    public Signer(InputStream isToSign, Certificates certificate) {
+        this.isToSign = isToSign;
+        this.certificate = certificate;
     }
 
     @Override
@@ -63,8 +70,7 @@ public class Signer extends GenericXMLSignature {
 
     /**
      *
-     * @return
-     * @throws NoSuchAlgorithmException
+     * @return @throws NoSuchAlgorithmException
      * @throws CertificateException
      * @throws IOException
      * @throws CertStoreException
@@ -72,6 +78,10 @@ public class Signer extends GenericXMLSignature {
      * @throws Exception
      */
     public ByteArrayOutputStream sign() throws NoSuchAlgorithmException, CertificateException, IOException, CertStoreException, KeyStoreException, Exception {
-        return execute(this.cert);
+        if (cert != null) {
+            return execute(this.cert);
+        } else {
+            return execute(this.certificate);
+        }
     }
 }

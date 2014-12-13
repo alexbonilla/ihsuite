@@ -5,6 +5,7 @@ package com.iveloper.comprobantes.security.signer;
  * @author Alex
  */
 import com.iveloper.ihsuite.entities.Certificate;
+import com.iveloper.portal.entities.Certificates;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -34,7 +35,7 @@ import es.mityc.firmaJava.libreria.xades.FirmaXML;
 import es.mityc.javasign.pkstore.CertStoreException;
 import es.mityc.javasign.pkstore.IPKStoreManager;
 import es.mityc.javasign.pkstore.keystore.KSStore;
-import es.mityc.javasign.pkstore.keystore.KeyTool;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -76,6 +77,57 @@ public abstract class GenericXMLSignature {
 
         // Obtencion del gestor de claves
         IPKStoreManager storeManager = getPKStoreManager(cert);
+        if (storeManager == null) {
+            Logger.getLogger(GenericXMLSignature.class.getName()).log(Level.WARNING, "No hay almacen de claves.");
+        }
+
+        // Obtencion del certificado para firmar. Utilizaremos el primer
+        // certificado del almacen.
+        X509Certificate certificate = getFirstCertificate(storeManager);
+        if (certificate == null) {
+            Logger.getLogger(GenericXMLSignature.class.getName()).log(Level.WARNING, "No hay certificado.");
+        }
+
+        // Obtención de la clave privada asociada al certificado
+        PrivateKey privateKey;
+        try {
+            privateKey = storeManager.getPrivateKey(certificate);
+        } catch (CertStoreException e) {
+            Logger.getLogger(GenericXMLSignature.class.getName()).log(Level.WARNING, "Clave incorrecta.");
+            throw e;
+        }
+
+        // Obtención del provider encargado de las labores criptográficas
+        Provider provider = storeManager.getProvider(certificate);
+
+        /*
+         * Creación del objeto que contiene tanto los datos a firmar como la
+         * configuración del tipo de firma
+         */
+        DataToSign dataToSign = createDataToSign();
+
+        // Firmamos el documento
+        Document docSigned = null;
+        try {
+            /*
+             * Creación del objeto encargado de realizar la firma
+             */
+            FirmaXML firma = createFirmaXML();
+            Object[] res = firma.signFile(certificate, dataToSign, privateKey, provider);
+            docSigned = (Document) res[0];
+        } catch (Exception ex) {
+            Logger.getLogger(GenericXMLSignature.class.getName()).log(Level.WARNING, "No existe el objeto firma.");
+            throw ex;
+        }
+
+        // Guardamos la firma a un fichero en el home del usuario
+        return saveDocumentToFile(docSigned);
+    }
+    
+    protected ByteArrayOutputStream execute(Certificates certif) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, CertStoreException, Exception {
+
+        // Obtencion del gestor de claves
+        IPKStoreManager storeManager = getPKStoreManager(certif);
         if (storeManager == null) {
             Logger.getLogger(GenericXMLSignature.class.getName()).log(Level.WARNING, "No hay almacen de claves.");
         }
@@ -277,6 +329,24 @@ public abstract class GenericXMLSignature {
         return storeManager;
     }
 
+    private IPKStoreManager getPKStoreManager(Certificates certif) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+
+        IPKStoreManager storeManager = null;
+        try {
+            KeyStore ks = KeyStore.getInstance("PKCS12");
+            ks.load(new ByteArrayInputStream(certif.getContent()), certif.getPass().toCharArray());
+            storeManager = new KSStore(ks, new PassStoreKS(certif.getPass()));
+            for (Enumeration e = ks.aliases(); e.hasMoreElements();) {
+                String alias = (String) e.nextElement();
+                //System.out.println("@:" + alias);
+            }
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException ex) {
+            Logger.getLogger(GenericXMLSignature.class.getName()).log(Level.WARNING, "Error de clave o no se encuentra archivo firma.");
+            throw ex;
+        }
+        return storeManager;
+    }
+    
     /**
      * <p>
      * Recupera el primero de los certificados del almacén.

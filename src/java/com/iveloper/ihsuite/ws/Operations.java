@@ -8,8 +8,6 @@ package com.iveloper.ihsuite.ws;
 import com.iveloper.comprobantes.security.signer.Signer;
 import com.iveloper.comprobantes.utils.ArchivoUtils;
 import com.iveloper.ihsuite.db.ihOperations;
-import com.iveloper.ihsuite.entities.Lot;
-import com.iveloper.ihsuite.entities.SuiteDocument;
 import com.iveloper.ihsuite.process.DocumentProcessor;
 import com.iveloper.ihsuite.utils.LotType;
 import com.iveloper.ihsuite.utils.SendFileEmail;
@@ -17,6 +15,15 @@ import com.iveloper.ihsuite.utils.SriStatus;
 import com.iveloper.ihsuite.ws.responses.DocFacInstance;
 import com.iveloper.ihsuite.ws.responses.wsResponse;
 import com.iveloper.ihsuite.ws.responses.wsResponseData;
+import com.iveloper.portal.controllers.CertificatesJpaController;
+import com.iveloper.portal.controllers.DocumentsJpaController;
+import com.iveloper.portal.controllers.LotsJpaController;
+import com.iveloper.portal.controllers.ValidatorsJpaController;
+import com.iveloper.portal.controllers.exceptions.PreexistingEntityException;
+import com.iveloper.portal.controllers.exceptions.RollbackFailureException;
+import com.iveloper.portal.entities.Certificates;
+import com.iveloper.portal.entities.Documents;
+import com.iveloper.portal.entities.Lots;
 import es.mityc.javasign.pkstore.CertStoreException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,12 +31,19 @@ import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.transaction.UserTransaction;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
@@ -42,13 +56,13 @@ import org.xml.sax.SAXException;
 public class Operations {
 
 //    private final String configuration_path = System.getProperty("confPath");
-//    private String configuration_path = "C:\\Users\\Alex\\Documents\\Teletronica\\ihsuite_configuration.properties";
-    private String configuration_path = "/usr/local/share/jboss/entities/";
+    private String configuration_path = "/Users/alexbonilla/Documents/Teletronica/";
+//    private String configuration_path = "/usr/local/share/jboss/entities/";
     private String AMBIENTE = "1";
 
     private ihOperations dbOperations;
-    
-    private String getConfigurationPath(String entityId){
+
+    private String getConfigurationPath(String entityId) {
         return configuration_path + entityId + ".properties";
     }
 
@@ -73,18 +87,36 @@ public class Operations {
     public wsResponse CreateLot(@WebParam(name = "description") String description, @WebParam(name = "typeLot") LotType typeLot, @WebParam(name = "user") String user, @WebParam(name = "pass") String pass, @WebParam(name = "userEntityId") String userEntityId, @WebParam(name = "notiEmailInternal") String notiEmailInternal) {
         wsResponse res = new wsResponse();
         try {
-            dbOperations = new ihOperations(getConfigurationPath(userEntityId));
-//            dbOperations = new ihOperations(configuration_path);
-            dbOperations.setDatabase(userEntityId);
-            dbOperations.setUser(user);
-            dbOperations.setPass(pass);
-            dbOperations.connect();
-            Lot lot = dbOperations.createLot(typeLot);
-            dbOperations.disconnect();
+//            dbOperations = new ihOperations(getConfigurationPath(userEntityId));
+////            dbOperations = new ihOperations(configuration_path);
+//            dbOperations.setDatabase(userEntityId);
+//            dbOperations.setUser(user);
+//            dbOperations.setPass(pass);
+//            dbOperations.connect();
+//            Lot lot = dbOperations.createLot(typeLot);
+//            dbOperations.disconnect();
+
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("ihsuite" + userEntityId + "PU");
+            Context c = new InitialContext();
+            UserTransaction utx = (UserTransaction) c.lookup("java:comp/UserTransaction");
+
+            LotsJpaController lotsController = new LotsJpaController(utx, emf);
+
+            Lots newLot = new Lots();
+            newLot.setLotid(UUID.randomUUID().toString());
+            newLot.setLotnumber(UUID.randomUUID().toString());
+            newLot.setLotopen(true);
+            newLot.setLottype(typeLot.toString());
+            newLot.setDatecreated(new Date());
+            lotsController.create(newLot);
             res.setProcessed(true);
-            res.setLotId(lot.getLotId().toString());
-            res.setLotNumber(lot.getLotNumber().toString());
-        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            res.setLotId(newLot.getLotid());
+            res.setLotNumber(newLot.getLotnumber());
+        } catch (IOException | ClassNotFoundException | SQLException | RollbackFailureException | PreexistingEntityException ex) {
+            Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
+            res.setProcessed(false);
+            res.setMessageException(Arrays.asList(ex.toString()));
+        } catch (Exception ex) {
             Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
             res.setProcessed(false);
             res.setMessageException(Arrays.asList(ex.toString()));
@@ -93,7 +125,8 @@ public class Operations {
             SendFileEmail sfe = new SendFileEmail();
             sfe.setUser("alex@iveloper.com");
             sfe.setPwd("bgNILL1982");
-            sfe.setHost("mail.iveloper.com");
+            sfe.setHost("gator4095.hostgator.com");
+            sfe.setPort("465");
             sfe.setFrom("alex@iveloper.com");
             sfe.setTo(notiEmailInternal);
             sfe.setMessageSubject("InvoiceHUB Suite");
@@ -145,41 +178,67 @@ public class Operations {
         Logger.getLogger(Operations.class.getName()).log(Level.INFO, "Contenido xml: {0}", xmlString);
 
         try {
-            dbOperations = new ihOperations(getConfigurationPath(userEntityId));
-//            dbOperations = new ihOperations(configuration_path);
-            dbOperations.setDatabase(userEntityId);
-            dbOperations.setUser(user);
-            dbOperations.setPass(pass);
-            dbOperations.connect();
+//            dbOperations = new ihOperations(getConfigurationPath(userEntityId));
+////            dbOperations = new ihOperations(configuration_path);
+//            dbOperations.setDatabase(userEntityId);
+//            dbOperations.setUser(user);
+//            dbOperations.setPass(pass);
+//            dbOperations.connect();
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("ihsuite" + userEntityId + "PU");
+            Context c = new InitialContext();
+            UserTransaction utx = (UserTransaction) c.lookup("java:comp/UserTransaction");
+            ValidatorsJpaController validatorsController = new ValidatorsJpaController(utx, emf);
             InputStream is = ArchivoUtils.xmlStringToInputStream(xmlString);
-            String validation = ArchivoUtils.validarContraEsquema(dbOperations, docTypeCode, is);
+            String validation = validatorsController.validateAgainstSchema(docTypeCode, is);
+
             if (validation == null) {
                 Logger.getLogger(Operations.class.getName()).log(Level.INFO, "El archivo tiene una construcción válida.");
-                Signer signer = new Signer(ArchivoUtils.xmlStringToInputStream(xmlString), dbOperations.getDigitalCertificate(userEntityId));
+                CertificatesJpaController certificatesController = new CertificatesJpaController(utx, emf);
+                Certificates certificate = certificatesController.findCertificates(userEntityId);
+                Signer signer = new Signer(ArchivoUtils.xmlStringToInputStream(xmlString), certificate);
                 ByteArrayOutputStream bos = signer.sign();
                 Logger.getLogger(Operations.class.getName()).log(Level.INFO, "Se firmó el documento");
-                SuiteDocument sdoc = new SuiteDocument();
-                sdoc.setLotId(UUID.fromString(lotId));
-//                sdoc.setLotId(UUID.randomUUID());
-                sdoc.setBos(bos);
-                sdoc.setDocNum(docNum);
-                sdoc.setDocTypeCode(docTypeCode);
-                sdoc.setDocAppRefCode(docAppRefCode);
-                sdoc.setDocRef(docRef);
-                sdoc.setReference(referencia);
-                sdoc.setStatus("NO PROCESADO");
+
+//                SuiteDocument sdoc = new SuiteDocument();
+//                sdoc.setLotId(UUID.fromString(lotId));
+//                sdoc.setBos(bos);
+//                sdoc.setDocNum(docNum);
+//                sdoc.setDocTypeCode(docTypeCode);
+//                sdoc.setDocAppRefCode(docAppRefCode);
+//                sdoc.setDocRef(docRef);
+//                sdoc.setReference(referencia);
+//                sdoc.setStatus("NO PROCESADO");
+                Documents newDocument = new Documents();
+                newDocument.setDocumentid(UUID.randomUUID().toString());
+                newDocument.setLotid(lotId);
+                newDocument.setDocument(bos.toByteArray());
+                newDocument.setDocnum(docNum);
+                newDocument.setDoctypecode(docTypeCode);
+                newDocument.setDocapprefcode(docAppRefCode);
+                newDocument.setDocref(docRef);
+                newDocument.setReference(referencia);
+                newDocument.setDocstatus("NO PROCESADO");
+                newDocument.setDatecreated(new Date());
+                
+                
+
                 if (clientContact != null) {
-                    sdoc.setNotifyname(clientContact.getName());
-                    sdoc.setNotifyemail(clientContact.getEmail1());
+                    newDocument.setNotifyemail(clientContact.getEmail1());
+                    newDocument.setNotifyname(clientContact.getName());
                 }
-                if (dbOperations.createSuiteDocument(sdoc) == 1) {
+
+                DocumentsJpaController documentsController = new DocumentsJpaController(utx, emf);
+                documentsController.create(newDocument);
+                if (documentsController.findDocuments(newDocument.getDocumentid()) != null) {
                     Logger.getLogger(Operations.class.getName()).log(Level.INFO, "Se guardó el documento");
                     res.setProcessed(true);
-                    res.setDocumentId(sdoc.getDocumentId().toString());
+                    res.setDocumentId(newDocument.getDocumentid());
                     DocumentProcessor docprocessor = new DocumentProcessor();
                     docprocessor.setAmbiente(AMBIENTE);
-                    docprocessor.setDbOperations(dbOperations);
-                    docprocessor.setSdoc(sdoc);
+//                    docprocessor.setDbOperations(dbOperations);
+//                    docprocessor.setSdoc(sdoc);
+                    docprocessor.setDocument(newDocument);
+                    docprocessor.setUserEntityId(userEntityId);
 
                     Thread thread1 = new Thread(docprocessor);
                     thread1.start();
@@ -189,7 +248,7 @@ public class Operations {
                 res.setProcessed(false);
                 res.setMessageException(Arrays.asList("El archivo está mal construido o está vacio: " + validation));
             }
-            dbOperations.disconnect();
+//            dbOperations.disconnect();
 
         } catch (IOException | ClassNotFoundException | SQLException | SAXException | TransformerException | ParserConfigurationException | CertificateException | CertStoreException ex) {
             Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,7 +264,8 @@ public class Operations {
             SendFileEmail sfe = new SendFileEmail();
             sfe.setUser("alex@iveloper.com");
             sfe.setPwd("bgNILL1982");
-            sfe.setHost("mail.iveloper.com");
+            sfe.setHost("gator4095.hostgator.com");
+            sfe.setPort("465");
             sfe.setFrom("alex@iveloper.com");
             sfe.setTo("alexfbonilla@hotmail.com");
             sfe.setMessageSubject("InvoiceHUB Suite");
@@ -241,25 +301,66 @@ public class Operations {
         wres.setDocumentId(documentId);
         wres.setProcessed(false);
         try {
-            dbOperations = new ihOperations(getConfigurationPath(userEntityId));
-//            dbOperations = new ihOperations(configuration_path);
-            dbOperations.setDatabase(userEntityId);
-            dbOperations.setUser(user);
-            dbOperations.setPass(pass);
-            dbOperations.connect();
-            DocFacInstance document = dbOperations.getDocFacInstance(documentId);
+//            dbOperations = new ihOperations(getConfigurationPath(userEntityId));
+////            dbOperations = new ihOperations(configuration_path);
+//            dbOperations.setDatabase(userEntityId);
+//            dbOperations.setUser(user);
+//            dbOperations.setPass(pass);
+//            dbOperations.connect();
+
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("ihsuite" + userEntityId + "PU");
+            Context c = new InitialContext();
+            UserTransaction utx = (UserTransaction) c.lookup("java:comp/UserTransaction");
+            DocumentsJpaController documentsController = new DocumentsJpaController(utx, emf);
+
+            Documents document = documentsController.findDocuments(documentId);
             if (document != null) {
+                DocFacInstance documentIns = new DocFacInstance();
+                documentIns.setDocumentid(UUID.fromString(documentId));
+                documentIns.setLotid(UUID.fromString(document.getLotid()));
+                documentIns.setDatecreated(document.getDatecreated());
+                documentIns.setDocument(document.getDocument());
+                documentIns.setDocapprefcode(document.getDocapprefcode());
+                documentIns.setDoctypecode(document.getDoctypecode());
+                documentIns.setDocnum(document.getDocnum());
+                documentIns.setReference(document.getReference());
+                documentIns.setDocref(document.getDocref());
+                documentIns.setNotifyname(document.getNotifyname());
+                documentIns.setNotifyemail(document.getNotifyemail());
+                documentIns.setDocstatus(SriStatus.retornaSriStatus(document.getDocstatus()));
+                documentIns.setStatuschanged(document.getStatuschanged());
+                documentIns.setDocautorizacion(document.getDocautorizacion());
+                documentIns.setDocautorizaciondate(document.getDocautorizaciondate());
+
                 wres.setProcessed(true);
-                wres.setDocumentStatus(document.getDocstatus());
-                wres.setDocumentInstance(document);
-                if (document.getDocstatus() == SriStatus.Autorizada) {
+                wres.setDocumentStatus(SriStatus.retornaSriStatus(document.getDocstatus()));
+                wres.setDocumentInstance(documentIns);
+                if (documentIns.getDocstatus() == SriStatus.Autorizada) {
                     wres.setDocumentAutorizacion(document.getDocautorizacion());
                     wres.setDocumentAutorizacionDate(document.getDocautorizaciondate());
                     Logger.getLogger(Operations.class.getName()).log(Level.INFO, "No. de Autorización obtenido: {0}", wres.getDocumentAutorizacion());
                     Logger.getLogger(Operations.class.getName()).log(Level.INFO, "Fecha de Autorización: {0}", wres.getDocumentAutorizacionDate());
+
+                    SendFileEmail sfe = new SendFileEmail();
+                    sfe.setUser("alex@iveloper.com");
+                    sfe.setPwd("bgNILL1982");
+                    sfe.setHost("gator4095.hostgator.com");
+                    sfe.setPort("465");
+                    sfe.setFrom("alex@iveloper.com");
+                    sfe.setTo(document.getNotifyemail());
+                    sfe.setMessageSubject("InvoiceHUB Suite");
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Estimado ").append(document.getNotifyname());
+                    sb.append("Fue emitido un comprobante electrónico a su nombre.");
+
+                    sfe.setMessageBody(sb.toString());
+
+                    Thread thread2 = new Thread(sfe);
+                    thread2.start();
                 }
             }
-        } catch (ClassNotFoundException | SQLException | IOException ex) {
+        } catch (NamingException ex) {
             Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
         }
         return wres;
